@@ -6,7 +6,7 @@
 
     <groupId>com.insightsystems.dal.teracue</groupId>
     <artifactId>ENC-300</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
 
 	<properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -30,23 +30,23 @@
         <dependency>
             <groupId>com.avispl.symphony.api</groupId>
             <artifactId>symphony-api-commons</artifactId>
-            <version>5.0.0</version>
+            <version>5.1.1</version>
             <scope>system</scope>
-            <systemPath>${basedir}/lib/symphony-api-commons-5.0.0.jar</systemPath>
+            <systemPath>${basedir}/lib/symphony-api-commons-5.1.1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.avispl.symphony.api</groupId>
             <artifactId>symphony-api-dal</artifactId>
-            <version>5.0.0</version>
+            <version>5.1.1</version>
             <scope>system</scope>
-            <systemPath>${basedir}/lib/symphony-api-dal-5.0.0.jar</systemPath>
+            <systemPath>${basedir}/lib/symphony-api-dal-5.1.1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.avispl.symphony.dal</groupId>
             <artifactId>symphony-dal-commons</artifactId>
-            <version>5.0.0</version>
+            <version>5.1.1</version>
             <scope>system</scope>
-            <systemPath>${basedir}/lib/symphony-dal-commons-5.0.0.jar</systemPath>
+            <systemPath>${basedir}/lib/symphony-dal-commons-5.1.1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
