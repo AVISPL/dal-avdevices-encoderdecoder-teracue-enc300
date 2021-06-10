@@ -1,4 +1,4 @@
-package com.insightsystems.symphony.dal.teracue;
+package com.insightsystems.dal.teracue;
 
 import com.avispl.symphony.api.dal.dto.monitor.ExtendedStatistics;
 import com.avispl.symphony.api.dal.dto.monitor.Statistics;
@@ -9,7 +9,31 @@ import com.avispl.symphony.dal.BaseDevice;
 
 import java.util.*;
 
-public class Enc300 extends BaseDevice implements Monitorable{
+/**
+ * Teracue ENC-300 Encoder DAL
+ * Company: Insight Systems
+ * @author Jayden Loone (@JaydenLInsight)
+ * @version 1.0.5
+ *
+ * Device does not support remote control
+ *
+ * Monitored Statistics:
+ *  - Hostname
+ *  - EncoderRunning
+ *  - TotalBytesEncoded
+ *  - EncoderTransportRate
+ *  - VideoResolution
+ *  - VideoCodec
+ *  - RecordingActive
+ *  - RecordingMediaPresent
+ *  - SystemDate
+ *  - SystemTime
+ *  - Uptime
+ *  - SystemTemperature
+ *  - NetworkTx
+ *  - NetworkRx
+ */
+public class Enc300 extends BaseDevice implements Monitorable {
     private final List<String> snmpOids = new ArrayList<String>()
     {{
         add(".1.3.6.1.4.1.22145.3.3.4.1.1.0"); //Hostname
@@ -72,13 +96,15 @@ public class Enc300 extends BaseDevice implements Monitorable{
                         stats.put(key, convertBps(value));
                         break;
                     case "SystemTemperature":
-                        stats.put(key, (value.substring(0,value.length()-1) + "." + value.charAt(value.length()-1)).replace("/0+$/","") + "°C");
+                        stats.put(key,convertTemperature(value));
                         break;
 
                     default:
                         stats.put(key, value);
                 }
 
+            } else {
+                throw new Exception("SNMP request has timed out. " + this.getHost() + " host unresponsive.");
             }
         }
         extStats.setStatistics(stats);
@@ -86,20 +112,36 @@ public class Enc300 extends BaseDevice implements Monitorable{
     }
 
     /**
+     * Converts integer temperature string represented in 10ths of a degree to formatted string
+     * @param temperatureValue Integer String value representation of temperature
+     * @return Formatted temperature string "x°C"
+     */
+    private String convertTemperature(String temperatureValue) {
+        try{
+            int temp = Integer.parseInt(temperatureValue)/10; //Losing decimals is not an issue- device has 1 degree precision
+            return temp + "°C";
+        } catch (Exception e){
+            if (this.logger.isWarnEnabled())
+                this.logger.warn("[convertTemperature] Unable to parse Integer in value: " + temperatureValue + " Error: " + e.getMessage());
+            return "";
+        }
+    }
+
+    /**
      * Converts numeric string to formatted string in bit/s or kbit/s
-     * @param value String value to be converted to bps string
+     * @param integerString Integer value to be converted to bits per second string
      * @return Formatted string in bits or kbits per second
      */
-    private String convertBps(String value) {
+    private String convertBps(String integerString) {
         try{
-            final float bits = Float.parseFloat(value);
+            int bits = Integer.parseInt(integerString);
             if (bits >= 1000)
                 return bits/1000 + " kbit/s";
             else
                 return bits + " bit/s";
         } catch (Exception e){
-            if (this.logger.isDebugEnabled())
-                this.logger.debug("Unable to parse float in value: " + value + " Error: " + e.getMessage());
+            if (this.logger.isWarnEnabled())
+                this.logger.warn("[convertBps] Unable to parse Integer in value: " + integerString + " Error: " + e.getMessage());
             return "";
         }
     }
