@@ -1,4 +1,4 @@
-package com.insightsystems.symphony.dal.teracue;
+package com.insightsystems.dal.teracue;
 
 import com.avispl.symphony.api.dal.dto.monitor.ExtendedStatistics;
 import org.junit.Assert;
@@ -13,6 +13,7 @@ public class Enc300Test {
     @Before
     public void setup() throws Exception {
         device.setHost("192.168.215.78");
+        device.setSnmpCommunity("public");
         device.init();
     }
 
